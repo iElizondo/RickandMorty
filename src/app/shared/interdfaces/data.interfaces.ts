@@ -4,7 +4,7 @@ export interface APIResponse<T>{
 
 export interface DataResponse {
     characters: APIResponse<Characters[]>;
-    episode: APIResponse<Episode[]>;
+    episodes: APIResponse<Episode[]>;
 }
 
 export interface Episode {

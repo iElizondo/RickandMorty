@@ -46,9 +46,9 @@ export class DataService {
     }).valueChanges.pipe(
       take(1),
       tap(({ data }) => {
-        const { characters, episode } = data;
+        const { characters, episodes } = data;
         this.charactersSubject.next(characters.results);
-        this.episodeSubject.next(episode.results);
+        this.episodeSubject.next(episodes.results);
       })
     ).subscribe();
   }
