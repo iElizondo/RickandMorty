@@ -1,5 +1,6 @@
 import { CursorError } from "@angular/compiler/src/ml_parser/lexer";
 import { Injectable } from "@angular/core";
+import { ToastrService } from "ngx-toastr";
 import { BehaviorSubject } from "rxjs";
 import { Characters } from "../interdfaces/data.interfaces";
 
@@ -11,7 +12,7 @@ export class LocalStorageService {
     private characterFavSubject = new BehaviorSubject<Characters[]>(null);
     characterFav$ = this.characterFavSubject.asObservable();
     
-    constructor() {
+    constructor(private toastrSvc: ToastrService) {
         this.initialStorage();
     }
 
@@ -27,9 +28,10 @@ export class LocalStorageService {
             const currentsFav = this.getFavoritesCharacters();
             localStorage.setItem(MY_FAVORITES, JSON.stringify([...currentsFav, character]));
             this.characterFavSubject.next([...currentsFav, character])
+            this.toastrSvc.success(`${character.name} added to favorite`, "RickAndMortyApp");
         } catch (error) {
             console.error('Error saving localStorage', error);
-            alert('Error');
+            this.toastrSvc.error(`Error saving localStorage: ${error}`, "RickAndMortyApp");
         }
     }
     private removeFromFavorite(id: string): void {
@@ -38,9 +40,10 @@ export class LocalStorageService {
             const characters = currentsFav.filter(item => item.id !== id);
             localStorage.setItem(MY_FAVORITES, JSON.stringify([...characters]));
             this.characterFavSubject.next([...characters]);
+            this.toastrSvc.warning("Removed from favorite", "RickAndMortyApp");
         } catch (error) {
             console.error('Error removing localStorage', error);
-            alert('Error');
+            this.toastrSvc.error(`Error removing localStorage: ${error}`, "RickAndMortyApp");
         }
     }
 
@@ -51,6 +54,8 @@ export class LocalStorageService {
             return charactersFav;
         } catch (error) {
             console.error('Error getting favorites from localStorage', error);
+            this.toastrSvc.error(`Error getting favorites from localStorage: ${error}`, "RickAndMortyApp");
+            
         }   
     }
 
